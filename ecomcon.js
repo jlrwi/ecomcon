@@ -12,7 +12,11 @@ const rx_ecomcon = /^\/\/([a-zA-Z0-9_]+)\u0020?(.*)$/;
 
 const rx_tag = /^[a-zA-Z0-9_]+$/;
 
-export default Object.freeze(function ecomcon(source_string, tag_array) {
+export default Object.freeze(function ecomcon(
+    source_string, 
+    tag_array, 
+    comments_array = []
+) {
     const tag = Object.create(null);
     tag_array.forEach(
         function (string) {
@@ -22,7 +26,11 @@ export default Object.freeze(function ecomcon(source_string, tag_array) {
             tag[string] = true;
         }
     );
-    return source_string.split(rx_crlf).map(
+    return comments_array.map(
+        function (line) {
+            return "// " + line + "\n";
+        }
+    ).concat(source_string.split(rx_crlf).map(
         function (line) {
             const array = line.match(rx_ecomcon);
             return (
@@ -35,5 +43,5 @@ export default Object.freeze(function ecomcon(source_string, tag_array) {
                 : line + "\n"
             );
         }
-    ).join("");
+    )).join("");
 });
