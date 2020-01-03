@@ -14,10 +14,13 @@ const rx_tag = /^[a-zA-Z0-9_]+$/;
 
 export default Object.freeze(function ecomcon(
     source_string, 
-    tag_array, 
+    tag_array = [], 
     comments_array = []
 ) {
     const tag = Object.create(null);
+    if (!Array.isArray(tag_array)) {
+        throw new Error("ecomcon: invalid tag list");
+    }
     tag_array.forEach(
         function (string) {
             if (!rx_tag.test(string)) {
