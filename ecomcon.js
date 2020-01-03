@@ -29,6 +29,9 @@ export default Object.freeze(function ecomcon(
             tag[string] = true;
         }
     );
+    if (!Array.isArray(comments_array)) {
+        throw new Error("ecomcon: invalid comments list");
+    }
     return comments_array.map(
         function (line) {
             return "// " + line + "\n";
