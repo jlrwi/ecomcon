@@ -27,9 +27,18 @@ command line can also include a '-comment' specification. Ecomcon will
 exit(1) if there is an error.
 
 In JavaScript, it is available as the ecomcon function that takes a
-source string, an array of tags, and an optional array of comments. It
-will throw an exception if there is an error. If there is no error, it
-returns a string.
+source string, an array of tags, an optional array of comments, and an optional
+boolean flag to delete the tagged lines from the output. It will throw an
+exception if there is an error. If there is no error, it returns a string.
+
+The function exported from ecomcon_curried.js is curried to take a configuration
+object, then the input. The configuration object format is:
+
+    {
+        tags: <array>,
+        comments: <array> (optional),
+        erase: <boolean> (optional)
+    }
 
 C command line example:
 ----

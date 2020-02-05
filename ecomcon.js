@@ -15,7 +15,8 @@ const rx_tag = /^[a-zA-Z0-9_]+$/;
 export default Object.freeze(function ecomcon(
     source_string, 
     tag_array = [], 
-    comments_array = []
+    comments_array = [],
+    erase = false
 ) {
     const tag = Object.create(null);
     if (!Array.isArray(tag_array)) {
@@ -42,7 +43,7 @@ export default Object.freeze(function ecomcon(
             return (
                 Array.isArray(array)
                 ? (
-                    tag[array[1]] === true
+                    (tag[array[1]] === true) && (!erase)
                     ? array[2] + "\n"
                     : ""
                 )
