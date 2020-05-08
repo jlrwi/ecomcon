@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/jlrwi/ecomcon/issues"
   },
-  "homepage": "https://github.com/jlrwi/ecomcon#readme"
+  "homepage": "https://github.com/jlrwi/ecomcon#readme",
+  "type": "module"
 }

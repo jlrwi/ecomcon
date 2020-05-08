@@ -13,11 +13,19 @@ const rx_ecomcon = /^\/\/([a-zA-Z0-9_]+)\u0020?(.*)$/;
 const rx_tag = /^[a-zA-Z0-9_]+$/;
 
 // Lines ending with ~n won't receive a newline
-const write_line = function (line) {
+const write_line = function (is_tagged) {
     return (
-        line.endsWith("~n")
-        ? line.slice(0, -2)
-        : line + "\n"
+        is_tagged
+        ? function (line) {
+            return (
+                line.endsWith("~n")
+                ? line.slice(0, -2)
+                : line + "\n"
+            );
+        }
+        : function (line) {
+            return line + "\n";
+        }
     );
 };
 
@@ -38,13 +46,13 @@ export default Object.freeze(function (options = {}) {
         const is_tagged_fx = (
             erase
             ? write_nothing
-            : write_line
+            : write_line (true)
         );
 
         const not_tagged_fx = (
             extract
             ? write_nothing
-            : write_line
+            : write_line (false)
         );
 
         const tag = Object.create(null);
@@ -64,7 +72,7 @@ export default Object.freeze(function (options = {}) {
         }
         return comments_array.map(
             function (line) {
-                return "// " + write_line (line);
+                return "// " + write_line (false) (line);
             }
         ).concat(source_string.split(rx_crlf).map(
             function (line) {
