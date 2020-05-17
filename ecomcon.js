@@ -35,6 +35,7 @@ const write_nothing = function (ignore) {
 
 export default Object.freeze(function (options = {}) {
     return function (source_string) {
+        let activated_erase = false;
 
         const {
             tag_array = [],
@@ -43,16 +44,21 @@ export default Object.freeze(function (options = {}) {
             extract = false
         } = options;
 
+// If erasing, also recognize "erase" as a valid tag
+        if (erase) {
+            tag_array.push("erase");
+        }
+
         const is_tagged_fx = (
             erase
             ? write_nothing
-            : write_line (true)
+            : write_line(true)
         );
 
         const not_tagged_fx = (
             extract
             ? write_nothing
-            : write_line (false)
+            : write_line(false)
         );
 
         const tag = Object.create(null);
@@ -72,15 +78,31 @@ export default Object.freeze(function (options = {}) {
         }
         return comments_array.map(
             function (line) {
-                return "// " + write_line (false) (line);
+                return "// " + write_line(false)(line);
             }
         ).concat(source_string.split(rx_crlf).map(
             function (line) {
                 const array = line.match(rx_ecomcon);
+
+// On erase, tagging with erase and block comments will erase everything
+// within the block
+                if (erase && Array.isArray(array) && (array[1] === "erase")) {
+                    if (array[2].startsWith("/*")) {
+                        activated_erase = true;
+                    }
+                    if (array[2].startsWith("*/")) {
+                        activated_erase = false;
+                    }
+                }
+
+                if (activated_erase) {
+                    return is_tagged_fx(line);
+                }
+                
                 return (
-                    (Array.isArray(array) && tag[array[1]] === true)
-                    ? is_tagged_fx (array[2])
-                    : not_tagged_fx (line)
+                    (Array.isArray(array) && (tag[array[1]] === true))
+                    ? is_tagged_fx(array[2])
+                    : not_tagged_fx(line)
                 );
             }
         )).join("");
