@@ -12,97 +12,71 @@ const rx_ecomcon = /^\/\/([a-zA-Z0-9_]+)\u0020?(.*)$/;
 
 const rx_tag = /^[a-zA-Z0-9_]+$/;
 
-// Lines ending with ~n won't receive a newline
-const write_line = function (is_tagged) {
-    return (
-        is_tagged
-        ? function (line) {
-            return (
-                line.endsWith("~n")
-                ? line.slice(0, -2)
-                : line + "\n"
-            );
-        }
-        : function (line) {
-            return line + "\n";
-        }
-    );
-};
-
-const write_nothing = function (ignore) {
-    return "";
+const write_line = function (line) {
+    return line + "\n";
 };
 
 export default Object.freeze(function (options = {}) {
     return function (source_string) {
-        let activated_erase = false;
+        let tag = Object.create(null);
 
         const {
             tag_array = [],
             comments_array = [],
-            erase = false,
-            extract = false
+            on_tagged = write_line,
+            on_untagged = write_line
         } = options;
 
-// If erasing, also recognize "erase" as a valid tag
-        if (erase) {
-            tag_array.push("erase");
-        }
-
-        const is_tagged_fx = (
-            erase
-            ? write_nothing
-            : write_line(true)
-        );
-
-        const not_tagged_fx = (
-            extract
-            ? write_nothing
-            : write_line(false)
-        );
-
-        const tag = Object.create(null);
-        if (!Array.isArray(tag_array)) {
+// tag_array may be an array or an object
+        if (typeof tag_array !== "object") {
             throw new Error("ecomcon: invalid tag list");
         }
-        tag_array.forEach(
-            function (string) {
-                if (!rx_tag.test(string)) {
-                    throw new Error("ecomcon: " + string);
+
+// validate tag_array as an array and convert to tag object
+        if (Array.isArray(tag_array)) {
+            tag_array.forEach(
+                function (string) {
+                    if (!rx_tag.test(string)) {
+                        throw new Error("ecomcon: " + string);
+                    }
+                    tag[string] = true;
                 }
-                tag[string] = true;
-            }
-        );
+            );
+
+// validate tag_array as an object with properties being on_tagged functions
+        } else {
+            Object.values(tag_array).forEach(
+                function (value) {
+                    if ((typeof value !== "function") || (value.length > 1)) {
+                        throw new Error("ecomcon: invalid tag function");
+                    }
+                }
+            );
+            tag = tag_array;
+        }
+
         if (!Array.isArray(comments_array)) {
             throw new Error("ecomcon: invalid comments list");
         }
+
         return comments_array.map(
             function (line) {
-                return "// " + write_line(false)(line);
+                return "// " + write_line(line);
             }
         ).concat(source_string.split(rx_crlf).map(
             function (line) {
                 const array = line.match(rx_ecomcon);
 
-// On erase, tagging with erase and block comments will erase everything
-// within the block
-                if (erase && Array.isArray(array) && (array[1] === "erase")) {
-                    if (array[2].startsWith("/*")) {
-                        activated_erase = true;
-                    }
-                    if (array[2].startsWith("*/")) {
-                        activated_erase = false;
-                    }
-                }
-
-                if (activated_erase) {
-                    return is_tagged_fx(line);
-                }
-                
+// If tag property is true, use global on_tagged function
+// If tag property is a function, use it as the on_tagged function
                 return (
-                    (Array.isArray(array) && (tag[array[1]] === true))
-                    ? is_tagged_fx(array[2])
-                    : not_tagged_fx(line)
+                    (Array.isArray(array) && (tag[array[1]] !== undefined))
+                    ? (
+                        (tag[array[1]] === true)
+                        ? on_tagged(array[2])
+                        : tag[array[1]](array[2])
+                    )
+                    : on_untagged(line)
                 );
             }
         )).join("");
