@@ -44,10 +44,13 @@ export default Object.freeze(function (options = {}) {
             );
 
 // validate tag_array as an object with properties being on_tagged functions
+// or a boolean true which will use the default on_tagged function
         } else {
             Object.values(tag_array).forEach(
                 function (value) {
-                    if ((typeof value !== "function") || (value.length > 1)) {
+                    if ((value !== true) && (
+                        (typeof value !== "function") || (value.length > 1)
+                    )) {
                         throw new Error("ecomcon: invalid tag function");
                     }
                 }
