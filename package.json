@@ -1,10 +1,11 @@
 {
   "name": "@jlrwi/ecomcon",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "ecomcon: Enable Comments Conditionally",
-  "main": "ecomcon.js",
+  "main": "ecomcon.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js",
+    "demo": "node demo.js > demo.md"
   },
   "repository": {
     "type": "git",
