@@ -7,6 +7,7 @@
 <pre id=readout></pre>
 
 <script type=module>
+import ecomcon from "./ecomcon.js";
 
 const input = `// This is a sample file.
 
@@ -43,7 +44,6 @@ function Constructor(number) {
 //legacy module.exports = Constructor;
 `;
 
-import ecomcon from "./ecomcon.js";
 let output = ecomcon(
     input,
     ["es6", "test", "enter", "exit"] ,
