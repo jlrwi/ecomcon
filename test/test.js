@@ -3,15 +3,13 @@
 */
 
 import ecomcon from "../src/ecomcon.js";
-import {
-    pipe
-} from "@jlrwi/combinators";
-import {
-    method,
-    log
-} from "@jlrwi/esfunctions";
 import jscheck from "@jlrwi/jscheck";
 let jsc = jscheck();
+
+const log = function (value) {
+    console.log(value);
+    return value;
+};
 
 // copied from es-static-types
 const dictionary_map = function (f) {
@@ -73,7 +71,11 @@ const erase_untagged = function (line) {
     );
 };
 
-const test_functions = dictionary_map (method ("join") ("\r\n")) ({
+const test_functions = dictionary_map (
+    function (list) {
+        return list.join("\r\n");
+    }
+) ({
     test_activate_both: [
         "let a = arguments[0];",
         "let b = a + 17;",
@@ -170,9 +172,14 @@ const claim_function_test_case = function (test_source_list) {
         Object.keys(test_source_list).forEach(function (test_key) {
             jsc.claim({
                 name: title + ": " + test_key,
-                predicate: pipe (
-                    Function(ecomcon (options) (test_source_list[test_key]))
-                ),
+                predicate: function (verdict) {
+                    return function (a) {
+                        const f = Function(
+                            ecomcon (options) (test_source_list[test_key])
+                        );
+                        return verdict(f(a));
+                    };
+                },
                 signature: [jsc.integer()]
             });
         });
