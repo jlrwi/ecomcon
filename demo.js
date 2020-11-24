@@ -2,7 +2,7 @@
     fudge, node
 */
 
-import ecomcon from "./ecomcon.js";
+import ecomcon from "./src/ecomcon.js";
 
 const input = [
     "//taga const a = 'this line was tagged with taga';",
@@ -21,17 +21,13 @@ const input = [
     "//para on_tagged function to indicate the end of a paragraph./p"
 ].join("\r\n");
 
-const header = [
+[
     "# ecomcon demo",
     "Source code input:",
     "```javascript",
     input,
     "```"
-];
-
-const log = function (line) {
-    console.log(line);
-};
+].forEach(console.log);
 
 const write_nothing = function (ignore) {
     return "";
@@ -157,8 +153,6 @@ const config_options = [
     }
 ];
 
-header.forEach(log);
-
 config_options.forEach(function (demo) {
     const demo_output = [
         "## " + demo.title,
@@ -171,5 +165,5 @@ config_options.forEach(function (demo) {
         ecomcon(demo.options)(input),
         "```"
     ];
-    demo_output.forEach(log);
+    demo_output.forEach(console.log);
 });

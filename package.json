@@ -4,14 +4,14 @@
   "description": "ecomcon: Enable Comments Conditionally",
   "main": "ecomcon.min.js",
   "scripts": {
-    "test": "node test.js",
-    "demo": "node demo.js > demo.md"
+    "test": "node ./test/test.js",
+    "stage": "stage.bat"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jlrwi/ecomcon.git"
   },
-  "author": "",
+  "author": "Jonathan Reimer",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jlrwi/ecomcon/issues"

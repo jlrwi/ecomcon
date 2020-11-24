@@ -4,15 +4,22 @@ Created by Douglas Crockford, modified by Jonathan Reimer
 Public Domain 
 
 [Demo](demo.md) 
-
+ 
+##Modifications: 
+*Exported function is curried to accept either of these styles: 
+    *ecomcon ([tag_list]) (source_string) 
+    *ecomcon ({options}) (source_string) 
+*Enabled comments_array function described in the original documentation 
+*Handler functions can be passed in {options} to process tagged and untagged lines 
+ 
 Ecomcon is a filter that acts on selected comments by making them executable or removing them. The filter can also be used to generate documentation files from comments, as well as many other operations. This makes it possible to put development, performance, documentation, and testing scaffolding into a source file. The scaffolding is removed by minification, but is activated by ecomcon. Although the original filter was implemented in both C and Javascript, this modified version of ecomcon is only implemented in Javascript. 
-
+ 
 Ecomcon is a filter that takes a source file and looks for tagged comments in this form: 
 
     //tag stuff 
 
 The line comment starts at the beginning of the line. There can be no space between the '//' and the tag. 
-
+ 
 The filter is available as a curried ecomcon function that first takes an options parameter, and secondly a source string. 
 
 The options parameter can be either: 
