@@ -8,12 +8,12 @@
 //MD Public Domain/p/p
 //MD [Demo](demo.md)/p
 //MD /p
-//MD ##Modifications:/p
-//MD *Exported function is curried to accept either of these styles:/p
-//MD     *ecomcon ([tag_list]) (source_string)/p
-//MD     *ecomcon ({options}) (source_string)/p
-//MD *Enabled comments_array function described in the original documentation/p
-//MD *Handler functions can be passed in {options} to process
+//MD ## Modifications:/p
+//MD * Exported function is curried to accept either of these styles:/p
+//MD     * ecomcon ([tag_list]) (source_string)/p
+//MD     * ecomcon ({options}) (source_string)/p
+//MD * Enabled comments_array function described in the original documentation/p
+//MD * Handler functions can be passed in {options} to process
 //MD tagged and untagged lines/p
 //MD /p
 //MD Ecomcon is a filter that acts on selected comments by making them

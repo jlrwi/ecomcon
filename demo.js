@@ -1,8 +1,13 @@
 /*jslint
-    fudge, node
+    fudge
 */
 
 import ecomcon from "./src/ecomcon.js";
+
+const log = function (x) {
+    console.log(x);
+    return x;
+};
 
 const input = [
     "//taga const a = 'this line was tagged with taga';",
@@ -27,7 +32,7 @@ const input = [
     "```javascript",
     input,
     "```"
-].forEach(console.log);
+].forEach(log);
 
 const write_nothing = function (ignore) {
     return "";
@@ -165,5 +170,5 @@ config_options.forEach(function (demo) {
         ecomcon(demo.options)(input),
         "```"
     ];
-    demo_output.forEach(console.log);
+    demo_output.forEach(log);
 });
