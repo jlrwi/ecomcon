@@ -145,7 +145,6 @@ Output:
 //tagb const b = 'this line was tagged with tagb';
 const u = 'this line was untagged';
 
-
 //para These lines of text could be extracted and joined to
 //para create a text file.
 //para Line breaks must be signalled explicitly
@@ -180,7 +179,6 @@ Output:
 // The block tags and the const v=... line should be gone
 const a = 'this line was tagged with taga';
 const u = 'this line was untagged';
-
 
 //para These lines of text could be extracted and joined to
 //para create a text file.

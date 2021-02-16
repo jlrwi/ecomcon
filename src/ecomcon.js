@@ -49,6 +49,14 @@ const write_line = function (line) {
     return line + "\n";
 };
 
+const remove_empty_lines = function (line) {
+    return (line.length > 0);
+};
+
+const remove_multiple_blank_lines = function (line, index, source) {
+    return ((line !== "\n") || (index === 0) || (source[index - 1] !== "\n"));
+};
+
 export default Object.freeze(function ecomcon(options = {}) {
     return function (source_string) {
         let tag = Object.create(null);
@@ -148,6 +156,10 @@ export default Object.freeze(function ecomcon(options = {}) {
                     : on_untagged(line)
                 );
             }
+        ).filter(
+            remove_empty_lines
+        ).filter(
+            remove_multiple_blank_lines
         )).join("");
     };
 });
